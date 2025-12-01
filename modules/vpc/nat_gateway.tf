@@ -15,7 +15,7 @@ resource "aws_eip" "eips" {
   }
 }
 
-resource "aws_nat_gateway" "nat_gateway" {
+resource "aws_nat_gateway" "nat_gateways" {
   for_each      = local.from_az_to_public_subnet_id
   allocation_id = aws_eip.eips[each.key].allocation_id
   subnet_id     = each.value

@@ -1,3 +1,5 @@
+# 呼び出し元のリソースをここで定義
+
 module "vpc" {
   source         = "./modules/vpc"
   service_name   = "sample"
@@ -7,8 +9,14 @@ module "vpc" {
     Usage = "sample vpc explanation"
   }
 
-subnet_cidrs = {
-  public  = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
-  private = ["10.0.100.0/24", "10.0.101.0/24", "10.0.102.0/24"]
+  subnet_cidrs = {
+    public  = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
+    private = ["10.0.100.0/24", "10.0.101.0/24", "10.0.102.0/24"]
+  }
 }
+
+module "ecs_cluster" {
+  source       = "./modules/ecs"
+  service_name = "sample"
+  env          = terraform.workspace
 }
