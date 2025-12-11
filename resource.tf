@@ -20,3 +20,22 @@ module "ecs_cluster" {
   service_name = "sample"
   env          = terraform.workspace
 }
+
+module "ecr" {
+  source                      = "./modules/ecr"
+  service_name                = "sample"
+  env                         = terraform.workspace
+  role                        = "api"
+  image_tag_mutability        = "IMMUTABLE" # 必要に応じて MUTABLE に変更
+  repository_lifecycle_policy = ""          # カスタム JSON を渡す場合はここに文字列で指定
+}
+
+module "iam_oidc_provider" {
+  source                   = "./modules/iam/provider/oidc/github"
+  service_name             = "sample"
+  env                      = terraform.workspace
+  github_organization_name = "your-org"
+  github_repository_name   = "your-repo"
+  managed_iam_policy_arns  = [] # 必要に応じて AWS 管理ポリシー ARN を列挙
+  inline_policy_documents  = {} # 必要に応じて map でポリシー JSON を渡す
+}
