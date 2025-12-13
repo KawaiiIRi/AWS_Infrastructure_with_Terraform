@@ -14,6 +14,8 @@ terraform {
     }
   }
   backend "s3" {
+    # stateファイルの保存先を任意のS3とする。
+    # bucket       = "terraform-state-S3"
     bucket       = "terraform-state-sample-bucket-20251123"
     key          = "090-vpc/vpc.tfstate"
     region       = "ap-northeast-1"
