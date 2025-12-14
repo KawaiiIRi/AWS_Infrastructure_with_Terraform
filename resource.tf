@@ -29,13 +29,30 @@ module "ecr" {
   image_tag_mutability        = "IMMUTABLE" # 必要に応じて MUTABLE に変更
   repository_lifecycle_policy = ""          # カスタム JSON を渡す場合はここに文字列で指定
 }
+module "ecr_web" {
+  source                      = "./modules/ecr"
+  service_name                = "sample"
+  env                         = terraform.workspace
+  role                        = "web"
+  image_tag_mutability        = "IMMUTABLE"
+  repository_lifecycle_policy = ""
+}
 
 module "iam_oidc_provider" {
   source                   = "./modules/iam/provider/oidc/github"
   service_name             = "sample"
   env                      = terraform.workspace
-  github_organization_name = "your-org"
-  github_repository_name   = "your-repo"
+  # # Githubアカウントユーザー名
+  # github_organization_name = "your-org"
+  # Github上のpush対象リポジトリ
+  # github_repository_name   = "your-repo"
+  github_organization_name = "KawaiiIRi"
+  github_repository_name   = "AWS_Infrastructure_with_Terraform"
   managed_iam_policy_arns  = [] # 必要に応じて AWS 管理ポリシー ARN を列挙
   inline_policy_documents  = {} # 必要に応じて map でポリシー JSON を渡す
+  #ecr_repository_arns = ["arn:aws:ecr:ap-northeast-1:<アカウントID>:repository/sample-dev-api"]
+  ecr_repository_arns = [
+    "arn:aws:ecr:ap-northeast-1:637423273193:repository/sample-dev-api",
+    "arn:aws:ecr:ap-northeast-1:637423273193:repository/sample-dev-web"
+  ]
 }
