@@ -21,7 +21,7 @@ module "ecs_cluster" {
   env          = terraform.workspace
 }
 
-module "ecr" {
+module "ecr_api" {
   source                      = "./modules/ecr"
   service_name                = "sample"
   env                         = terraform.workspace
