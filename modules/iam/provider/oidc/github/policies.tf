@@ -10,3 +10,38 @@ resource "aws_iam_role_policy" "inline_policies" {
   name     = each.key
   policy   = each.value
 }
+
+# ECR への push/pull 用ポリシー（対象リポジトリを ecr_repository_arns に指定）
+resource "aws_iam_role_policy" "ecr_push" {
+  count = length(var.ecr_repository_arns) > 0 ? 1 : 0
+
+  role = aws_iam_role.role.id
+  name = "${var.service_name}-${var.env}-ecr-push"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["ecr:GetAuthorizationToken"]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:CompleteLayerUpload",
+          "ecr:DescribeRepositories",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart",
+          "ecr:ListImages"
+        ],
+        Resource = var.ecr_repository_arns
+      }
+    ]
+  })
+}
+
