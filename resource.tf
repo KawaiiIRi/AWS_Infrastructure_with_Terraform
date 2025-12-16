@@ -52,7 +52,7 @@ module "iam_oidc_provider" {
   inline_policy_documents  = {} # 必要に応じて map でポリシー JSON を渡す
   #ecr_repository_arns = ["arn:aws:ecr:ap-northeast-1:<アカウントID>:repository/sample-dev-api"]
   ecr_repository_arns = [
-    "arn:aws:ecr:ap-northeast-1:637423273193:repository/sample-dev-api",
-    "arn:aws:ecr:ap-northeast-1:637423273193:repository/sample-dev-web"
+    "arn:aws:ecr:ap-northeast-1:<アカウントID>:repository/sample-dev-api",
+    "arn:aws:ecr:ap-northeast-1:<アカウントID>:repository/sample-dev-web"
   ]
 }
