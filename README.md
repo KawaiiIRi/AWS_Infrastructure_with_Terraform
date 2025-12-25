@@ -137,3 +137,22 @@ destroy 後に再 apply する場合の注意:
 IAMロールや OIDC プロバイダー、ECR リポジトリにランダムサフィックスを付けていなければ、同じ名前で再作成され、ARN/リポジトリURIも同じになります。Secret に入れたロールARNが変わらないならそのまま使えます。
 もし命名に random_id などを使っていて ARN/URI が変わる構成なら、再作成後に Secret の値を更新してください。
 ECR リポジトリを destroy するとイメージは消えるので、再 apply 後に再ビルド・再 push が必要です（コンソールの「プッシュコマンドを表示」で再実行）。
+
+# Push3
+# ECSタスク定義/タスクロール/タスク実行ロール/ログ出力先のCloudWatch
+・ECSタスク定義
+apply後、タスク定義画面より対象のコンテナ情報を確認する。(タスクロール、タスク実行ロール、イメージ)
+<img width="941" height="398" alt="image" src="https://github.com/user-attachments/assets/7cce0709-4cb4-471e-8011-99fcca368809" />
+
+merge関数で定義した共通タグと追加タグでタグmapが作成されていることを確認する。
+<img width="955" height="376" alt="image" src="https://github.com/user-attachments/assets/40699dc5-6cef-4e0b-8ef2-04856795e641" />
+
+ログ設定確認
+<img width="932" height="374" alt="image" src="https://github.com/user-attachments/assets/18cf2f0a-0bc8-41ec-873c-ad0ad474f0a5" />
+
+・CloudWatchより対象のロググループが作成され、設定通りにログの保持期間が30日になっていること。
+　同様に、タグが設定されていることを確認する。
+<img width="953" height="374" alt="image" src="https://github.com/user-attachments/assets/11810667-2838-4867-a5b3-4a3c1504fba6" />
+<img width="948" height="308" alt="image" src="https://github.com/user-attachments/assets/39359f3e-352e-41e0-a190-27d040480c97" />
+
+
