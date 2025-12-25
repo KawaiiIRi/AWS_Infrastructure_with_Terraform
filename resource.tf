@@ -47,14 +47,14 @@ module "iam_oidc_provider" {
   # github_organization_name = "your-org"
   # Github上のpush対象リポジトリ
   # github_repository_name   = "your-repo"
-  github_organization_name = "KawaiiIRi"
-  github_repository_name   = "AWS_Infrastructure_with_Terraform"
+  github_organization_name = "<任意のGitgubユーザー名>"
+  github_repository_name   = "<任意のリポジトリ名>"
   managed_iam_policy_arns  = [] # 必要に応じて AWS 管理ポリシー ARN を列挙
   inline_policy_documents  = {} # 必要に応じて map でポリシー JSON を渡す
   #ecr_repository_arns = ["arn:aws:ecr:ap-northeast-1:<アカウントID>:repository/sample-dev-api"]
   ecr_repository_arns = [
-    "arn:aws:ecr:ap-northeast-1:637423273193:repository/sample-dev-api",
-    "arn:aws:ecr:ap-northeast-1:637423273193:repository/sample-dev-web"
+    "arn:aws:ecr:ap-northeast-1:<アカウントID>:repository/sample-dev-api",
+    "arn:aws:ecr:ap-northeast-1:<アカウントID>:repository/sample-dev-web"
   ]
 }
 
