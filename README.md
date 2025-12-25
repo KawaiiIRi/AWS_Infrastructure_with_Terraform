@@ -100,3 +100,40 @@ aws configure listコマンドでawsコマンド実行元環境におけるプ�
 移行、ワークフローファイルをリポジトリに反映する。
 やることはローカル環境からpush⇒PR作成⇒mainにマージして最新化石なので手順省略。
 
+# Github Actionsからの実行
+
+GitHub リポジトリの Actions タブを開く。
+左のワークフロー一覧から build-and-push-container-image（ファイル名に対応）を選択。
+<img width="1924" height="872" alt="image" src="https://github.com/user-attachments/assets/efe11276-e8a5-4d6c-9694-f6f7925de2aa" />
+
+右上の Run workflow をクリックし、ブランチ（例: main）を選択。
+<img width="1930" height="891" alt="image" src="https://github.com/user-attachments/assets/7fcef5ab-ac95-4d69-815c-6097846b7072" />
+<img width="1986" height="606" alt="image" src="https://github.com/user-attachments/assets/f452f200-2f6d-46b1-8b3d-79db0f43fdce" />
+<img width="1973" height="923" alt="image" src="https://github.com/user-attachments/assets/eb8c9bcd-39e3-4370-be7e-202437860783" />
+
+※下記画面のようにAssume Roleでエラーになった場合、
+対象のリポジトリ設定にて、Actionsの⇒Generalにて、
+Workflow permissionsで「Read and write permissions」の項目にチェックが入っているかを確認する。
+<img width="1961" height="877" alt="image" src="https://github.com/user-attachments/assets/3c09a439-186a-47e1-a6b4-a959dfdbe9c8" />
+<img width="1967" height="896" alt="image" src="https://github.com/user-attachments/assets/ebef7b82-ae1f-4f8f-b9d0-405a6126ed2f" />
+修正後に失敗ジョブをリラン
+<img width="1945" height="757" alt="image" src="https://github.com/user-attachments/assets/dc8febc7-0048-4ba3-bb6e-96a0f4661b91" />
+
+
+完了することを確認する。
+<img width="1945" height="880" alt="image" src="https://github.com/user-attachments/assets/c1315051-5c3a-4acd-83dc-8ace22507a3f" />
+
+# ここまでのワークフローの実行すること/しないこと
+やること：
+・GitHub Actions を手動で実行すると、指定したブランチのコードをチェックアウトし、AWS にログインして ECR へコンテナイメージをビルドして push します。
+入力は2つだけ：environment（dev/stg/prodなど）と build_target（mainやv1.0.0など、ビルドしたいブランチ/タグ）。
+・手順の中身：①コード取得 → ②OIDC で IAM ロールを引き受けて AWS 認証 → ③ECR にログイン → ④./image をコンテキストに Docker build → ⑤ECR のリポジトリ（例: sample-<env>-web）へ push。
+事前に必要：Secret にロールARN（IAM_ARN_TO_PUSH_IMAGE）、ロールは GitHub OIDC を信頼し ECR 権限あり、ECR リポジトリと ./image ディレクトリが存在。
+・やらないこと：デプロイはしない、自動トリガーもない（手動実行のみ）。
+
+# (Push2までの余談)学習用にAWSリソース再作成する場合の、destroy⇒再apply後の注意点
+
+destroy 後に再 apply する場合の注意:
+IAMロールや OIDC プロバイダー、ECR リポジトリにランダムサフィックスを付けていなければ、同じ名前で再作成され、ARN/リポジトリURIも同じになります。Secret に入れたロールARNが変わらないならそのまま使えます。
+もし命名に random_id などを使っていて ARN/URI が変わる構成なら、再作成後に Secret の値を更新してください。
+ECR リポジトリを destroy するとイメージは消えるので、再 apply 後に再ビルド・再 push が必要です（コンソールの「プッシュコマンドを表示」で再実行）。

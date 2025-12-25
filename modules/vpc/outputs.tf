@@ -20,12 +20,12 @@ output "private_subnets" {
 
 output "public_route_tables" {
   description = "ルートテーブルの情報です。"
-  value       = { for route_table in aws_route_table.public_route_tables :
-    route_table.tags["AvailabilityZone"] => route_table.id }
+  value = { for route_table in aws_route_table.public_route_tables :
+  route_table.tags["AvailabilityZone"] => route_table.id }
 }
 
 output "private_route_tables" {
   description = "ルートテーブルの情報です。"
-  value       = { for route_table in aws_route_table.private_route_tables :
-    route_table.tags["AvailabilityZone"] => route_table.id }
+  value = { for route_table in aws_route_table.private_route_tables :
+  route_table.tags["AvailabilityZone"] => route_table.id }
 }
